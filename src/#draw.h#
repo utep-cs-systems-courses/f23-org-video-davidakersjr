@@ -1,0 +1,11 @@
+#include "lcdutils.h"
+
+#include "lcddraw.h"
+
+void drawCircle;
+
+void drawBox(int x, int y, char* color, int size);
+
+void drawTriangle;
+
+void drawFilledBox;
