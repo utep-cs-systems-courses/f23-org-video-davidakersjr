@@ -67,12 +67,12 @@ int main(void) {
 
 
 
+  
 
 
 
 
-
-
+  
   or_sr(0x18);/* CPU off, GIE on */
 
   
@@ -82,19 +82,12 @@ int second = 0;
 int  move = 2;
 int shoot = 0;
 void game(){
-  lcd_init();
-  int sec = second;
   
+  int sec = second; 
+  gameMain(sec,move,shoot);
   
-  while(1){
     
-    
-    gameMain(sec,move,shoot);
-    sec = second;
-    move = 2;
-    shoot = 0;
-    
-  }
+  
 }
 
 void buzzer(){
@@ -144,20 +137,13 @@ static int listNotes[] = {400,500,600,700,800,900,1000,1100,1200,1300};
 
 
 void ultra(){
-  lcd_init();
+  
   buzzer_init();
 
-  int x = 30;
-  int y = 50;
-  char green = "COLOR_GREEN";
-  int size = 10;
-  char red = "COLOR_RED";
   
   
   
-  drawBox(x,y,green,size+1);
-
-  drawFillBox(x,y,red,size);
+ 
   for(int i = 0;i <= 9; i++){
 
     P1OUT ^= LED_RED;
@@ -173,7 +159,7 @@ void ultra(){
   }
   
   buzzer_set_period(0);
-  clearScreen(COLOR_BLUE);
+
 
 
 }
@@ -242,7 +228,8 @@ void oncePerSecond() // repeatedly start bright and gradually lower duty cycle, 
 
   blinkLimit ++;  // reduce duty cycle
   
-
+  
+  
 
   if (blinkLimit >= 8){
     blinkLimit = 0;
@@ -262,9 +249,9 @@ void secondUpdate()
 {
 
   static int secondCount = 0;
-
+  
   secondCount++;
-  second++;
+  
   if (secondCount >= 250){
 
     secondCount = 0;
@@ -272,10 +259,11 @@ void secondUpdate()
     flicker();
 
     oncePerSecond();
-    second= 0;
+    
     
 
   }
+  game();
 
 }
 
@@ -293,15 +281,12 @@ void timeAdvStateMachines() // called every 1/250 sec
   
   blinkUpdate();
 
-  gameMain(second,move,shoot);
+  
+  secondUpdate(); 
 
-  secondUpdate();
+ 
   
   
-
-
-
-
 
 }
 
@@ -311,11 +296,7 @@ void switch_interrupt_handler() {
 
   char p2val = P2IN;/* switch is in P2 */
 
-
-
-
-
-
+  
 
   /* update switch interrupt sense to detect changes from current buttons */
 
@@ -341,12 +322,18 @@ void switch_interrupt_handler() {
 
     // redControl(0);
     move = 0;
+    
+    ultra();
+    
   }
 
   else if(!(p2val & SW3)){
 
     // on = 1 - on ;
     move = 1;
+    
+    ultra();
+    
   }
 
   else if(!(p2val & SW4)){
@@ -354,7 +341,7 @@ void switch_interrupt_handler() {
     // ultra();
 
   }
-
+  
 
 
 }
@@ -371,15 +358,20 @@ void __interrupt_vec(WDT_VECTOR) WDT()/* 250 interrupts/sec */
 
 {
 
-
+  
 
   // handle blinking
 
-
+  
 
   timeAdvStateMachines();
+  
+  second++;
+  if(second == 250){
+    second = 0;
+  }
+  
  
-
 
 }
 
@@ -390,13 +382,9 @@ void __interrupt_vec(PORT2_VECTOR) Port_2(){
     P2IFG &= ~SWITCHES;      /* clear pending sw interrupts */
 
 
-
+    
     switch_interrupt_handler();/* single handler for all switches */
-
-
-
+    
   }
-
-
-
+  
 }

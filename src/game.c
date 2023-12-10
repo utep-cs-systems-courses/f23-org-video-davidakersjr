@@ -33,14 +33,14 @@ void gameMain(int sec, int move, int shoot){
       }
     }
     
-    if (sec == 249){
-      
-      if (enemyCordsX == 112){
+    if (sec%2 == 0 ){
+      gameEnemy(enemyCordsX,enemyCordsY,0);
+      if (enemyCordsX >= 112){
 	enemyDir = 0;
 	enemyCordsY += 16;
       }
       
-      if (enemyCordsY == 16){
+      if (enemyCordsX <= 16){
 	enemyDir = 1;
 	enemyCordsY += 16;
       }
@@ -48,11 +48,11 @@ void gameMain(int sec, int move, int shoot){
 	enemyCordsX += 16;
       }
       else{
-	enemyCordsY -=16;
+	enemyCordsX -=16;
       }
            
     }
-    gameEnemy(enemyCordsX,enemyCordsY);
+    gameEnemy(enemyCordsX,enemyCordsY,1);
   }
   
 }
@@ -63,12 +63,17 @@ void gamePlayer(int x){
   }
 
 }
-void gameEnemy(int x, int y){
-  if(x<=112||x<=16) {
+void gameEnemy(int x, int y, int mode){//Redraw old shape black
+  if(mode) {
     
     drawFillBox(x,y,COLOR_RED,16);
+  }
+  else{
+    drawFillBox(x,y,COLOR_BLACK,16);
   }
 }
 void gameGraphics(){
   clearScreen(COLOR_BLACK);
 }
+
+
