@@ -71,7 +71,7 @@ int main(void) {
 
 
 
-
+ 
   
   or_sr(0x18);/* CPU off, GIE on */
 
@@ -263,8 +263,6 @@ void secondUpdate()
     
 
   }
-  game();
-
 }
 
 
@@ -284,7 +282,7 @@ void timeAdvStateMachines() // called every 1/250 sec
   
   secondUpdate(); 
 
- 
+  
   
   
 
@@ -293,14 +291,14 @@ void timeAdvStateMachines() // called every 1/250 sec
 
 
 void switch_interrupt_handler() {
-
+  
   char p2val = P2IN;/* switch is in P2 */
-
+  
   
 
   /* update switch interrupt sense to detect changes from current buttons */
 
-
+  
 
   P2IES |= (p2val & SWITCHES);/* if switch up, sense down */
 
@@ -309,30 +307,33 @@ void switch_interrupt_handler() {
   P2IES &= (p2val | ~SWITCHES);
 
 
-
+ 
 
 
   if(!(p2val & SW1)){
 
     //game();
-
+    shoot = 1;
+    game();
+    shoot = 0;
   }
 
   else if(!(p2val & SW2)){
 
     // redControl(0);
     move = 0;
-    
+    game();
     ultra();
-    
+    move = 2;
   }
 
   else if(!(p2val & SW3)){
 
     // on = 1 - on ;
     move = 1;
-    
+    game();
     ultra();
+    move = 2;
     
   }
 

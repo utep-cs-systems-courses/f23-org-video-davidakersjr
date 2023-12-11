@@ -14,16 +14,16 @@ void gameMain(int sec, int move, int shoot){
   static int enemyDir = 0; //left is 0 right is 1
   
   if (enemyCordsY <= 144){
-
+    gamePlayer(playerX,0);
     if (move == 0){
       playerX -= 16;
-      gamePlayer(playerX);
+      gamePlayer(playerX,1);
     }
     if (move == 1){
       playerX += 16;
-      gamePlayer(playerX);
+      gamePlayer(playerX,1);
     }
-    gamePlayer(playerX);
+    gamePlayer(playerX,1);
     if (shoot){
       if (playerX == enemyCordsX){
 	//TEMP THROW GAME WIN
@@ -56,12 +56,17 @@ void gameMain(int sec, int move, int shoot){
   }
   
 }
-void gamePlayer(int x){
-  if (x <= 112 && x >= 0) { //Screen size - player size
+void gamePlayer(int x, int mode){
+  if(mode){
     
-    drawFillBox(x, 144, COLOR_GREEN, 16);
+    if (x <= 112 && x >= 0) { //Screen size - player size
+    
+      drawFillBox(x, 144, COLOR_GREEN, 16);
+    }
   }
-
+  else{
+    drawFillBox(x,144,COLOR_BLACK,16);
+  }
 }
 void gameEnemy(int x, int y, int mode){//Redraw old shape black
   if(mode) {

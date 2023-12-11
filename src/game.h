@@ -4,7 +4,7 @@
 
 void gameMain(int sec, int move, int shoot);
 
-void gamePlayer(int x);
+void gamePlayer(int x,int mode);
 
 void gameEnemy(int x, int y, int mode);
 
